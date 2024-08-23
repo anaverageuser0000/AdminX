@@ -1,0 +1,132 @@
+local ScreenGui = Instance.new("ScreenGui")
+local TopBar = Instance.new("TextButton")
+local BG = Instance.new("ScrollingFrame")
+
+-- Extra/Important
+local Player = game.Players.LocalPlayer
+local MS = Player:GetMouse()
+local UIS = game:GetService("UserInputService")
+local MBP = UIS:GetMouseButtonsPressed()
+local Open = true
+local OPlayers = ""
+
+
+
+TopBar.TextWrapped = true
+TopBar.TextScaled = true
+TopBar.Text = "Close"
+for i, v in game.Players:GetChildren() do
+	local Outline = Instance.new("Highlight")
+	Outline.Adornee = game.Workspace:WaitForChild(v.Name)
+	Outline.Parent = game.Workspace:WaitForChild(v.Name)
+	Outline.OutlineTransparency = 0.85
+	OPlayers = (OPlayers.. " ".. v.Name)
+	print(OPlayers)
+	Outline.Name = "Outline"
+end
+
+
+BG.Position = TopBar.Position - UDim2.new(0, 0, 0, -40)
+TopBar.Parent = ScreenGui
+TopBar.Size = UDim2.new(0, 140, 0, 40)
+BG.Size = UDim2.new(0, 140, 0, 190)
+BG.CanvasSize = BG.Size
+TopBar.Position = UDim2.new(0.8, 0, 0, 30)
+
+
+TopBar.MouseButton1Click:Connect(function(Inp)	
+	if Open then
+		Open = false
+		BG.Visible = false
+		TopBar.Text = "Open"
+	else
+		Open = true
+		BG.Visible = true
+		TopBar.Text = "Close"
+	end
+end)
+
+BG.Parent = TopBar
+ScreenGui.Parent = game.Players.LocalPlayer.PlayerGui
+
+-- GUIS below
+local Target = Instance.new("TextBox")
+Target.Size = UDim2.new(0, 65, 0, 40)
+Target.TextScaled = true
+Target.TextWrapped = true
+Target.Text = "Target"
+Target.Parent = TopBar
+Target.Position = UDim2.new(0, 0, 0, -40)
+local FindHelpa = ""
+
+local ResetOutlines = Instance.new("TextButton")
+ResetOutlines.Size = UDim2.new(0, 65, 0, 40)
+ResetOutlines.TextScaled = true
+ResetOutlines.TextWrapped = true
+ResetOutlines.Text = "Outline All"
+ResetOutlines.Parent = BG
+ResetOutlines.Position = UDim2.new(0.55, 0, 0, 0)
+
+local PlayerButton = Instance.new("TextButton")
+PlayerButton.Size = UDim2.new(0, 65, 0, 40)
+PlayerButton.TextScaled = true
+PlayerButton.TextWrapped = true
+PlayerButton.Text = "Taunt"
+PlayerButton.Parent = BG
+
+local WalkTo = Instance.new("TextButton")
+WalkTo.Size = UDim2.new(0, 65, 0, 40)
+WalkTo.TextScaled = true
+WalkTo.TextWrapped = true
+WalkTo.Text = "Walk To"
+WalkTo.Parent = BG
+WalkTo.Position = UDim2.new(0, 0, 0, 40)
+
+
+-- The functions below
+
+WalkTo.MouseButton1Click:Connect(function()
+	if game.Workspace:FindFirstChild(Target.Text) then
+	local Dist = (game.Workspace:FindFirstChild(Target.Text).Humanoid.RootPart.Position - game.Players.LocalPlayer.Character.PrimaryPart.Position).magnitude
+		Player.Character:FindFirstChild("Humanoid"):MoveTo(game.Workspace:FindFirstChild(Target.Text).HumanoidRootPart.Position)
+		print((game.Workspace:FindFirstChild(Target.Text).Humanoid.RootPart.Position - game.Players.LocalPlayer.Character.PrimaryPart.Position).magnitude)
+		while task.wait(0.1) do
+			Dist = (game.Workspace:FindFirstChild(Target.Text).Humanoid.RootPart.Position - game.Players.LocalPlayer.Character.PrimaryPart.Position).magnitude
+			Player.Character:FindFirstChild("Humanoid"):MoveTo(game.Workspace:FindFirstChild(Target.Text).HumanoidRootPart.Position)
+			if Dist <= 11 then
+				Player.Character.PrimaryPart.CFrame = Player.Character.PrimaryPart.CFrame + Vector3.new(0, -15, 0)
+				break
+			end
+		end
+	end
+end)
+
+ResetOutlines.MouseButton1Click:Connect(function()
+	for i, v in game.Players:GetChildren() do
+		if not game.Workspace:FindFirstChild(v.Name):FindFirstChild("Outline") then
+		local Outline = Instance.new("Highlight")
+		Outline.Adornee = game.Workspace:FindFirstChild(v.Name)
+		Outline.Parent = game.Workspace:FindFirstChild(v.Name)
+		Outline.Name = "Outline"
+		end
+	end
+end)
+
+PlayerButton.MouseButton1Click:Connect(function(Inp)
+	for i, v in game.Players:GetChildren() do
+		FindHelpa = game.Workspace:FindFirstChild(v.Name)
+		if v.Name == Target.Text or v.DisplayName == Target.Text then
+			print(FindHelpa)
+			local LastTargetPosition = game.Workspace:FindFirstChild(v.Name).Humanoid.RootPart.CFrame
+			local PlayerHumanoid = game.Workspace:FindFirstChild(v.Name).Humanoid
+			local LPos = game.Players.LocalPlayer.Character.Humanoid.RootPart.CFrame
+			game.Players.LocalPlayer.Character.Humanoid.RootPart.CFrame = LastTargetPosition + LastTargetPosition.LookVector * 20
+			game.Players.LocalPlayer.Character.Humanoid.RootPart.CFrame =  CFrame.new(PlayerHumanoid.RootPart.CFrame.Position, Vector3.new(LastTargetPosition.Position.X, PlayerHumanoid.RootPart.CFrame.Position.Y, LastTargetPosition.Position.Z))
+			task.wait(0.5)
+			game.Players.LocalPlayer.Character.Humanoid.RootPart.CFrame = LPos
+		end
+	end
+end)
+
+
+ScreenGui.ResetOnSpawn = false
