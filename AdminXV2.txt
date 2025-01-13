@@ -97,7 +97,7 @@ local function ButtonClick(Name, Bool, BoolExists)
 			Character.CFrame = PlayerCframe
 		end
 		elseif Name == "Force die" then
-			local Pos = SpeakerChar:FindFirstChild("HumanoidRootPart").Position
+			local Pos = SpeakerChar.Humanoid.RootPart.Position
 			local Character = game.Players.LocalPlayer.Character.Humanoid.RootPart
 			Character.CFrame =  CFrame.new(Vector3.new(Pos.X, game.Workspace.FallenPartsDestroyHeight + 20, Pos.Z))
 			
