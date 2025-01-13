@@ -93,8 +93,11 @@ local function ButtonClick(Name, Bool, BoolExists)
 				local PlayerTpTo = GetPlrRoot(SelectedPlr)
 		if PlayerTpTo then
 			local PlayerCframe = PlayerTpTo.CFrame
-			local Character = game.Players.LocalPlayer.Character.Humanoid.RootPart
-			Character.CFrame = PlayerCframe
+			if PlayerCframe then
+			game.Players.LocalPlayer.Character.Humanoid.RootPart.CFrame = PlayerCframe
+			else
+				Notify("No CFrame!", "Sorry! But we couldn't find the CFrame of the select player.")
+			end
 		end
 		elseif Name == "Force die" then
 			local Pos = SpeakerChar.Humanoid.RootPart.Position
