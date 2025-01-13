@@ -1,1 +1,309 @@
+-- MainEvents such as buttons and important data.
+local Plr = game.Players.LocalPlayer
+local UIS = game:GetService("UserInputService")
+local Players = game:GetService("Players")
+local SpeakerChar
+local RigType
+--
+local TweenService = game:GetService("TweenService")
+local ActiveBools = {}
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Parent = game.Players.LocalPlayer.PlayerGui
 
+
+local function Notify(Header, Text, Time)
+	local Header, Text = tostring(Header), tostring(Text)
+	local Notification = Instance.new("TextLabel")
+	Notification.Parent = ScreenGui
+	Notification.Size = UDim2.new(0.3, 0, 0.2, 0)
+	Notification.AnchorPoint = Vector2.new(0.5, 1)
+	Notification.Position = UDim2.new(0.5, 0, 1.4, 0)
+	local TweenGoal = {
+		Position = UDim2.new(0.5, 0, 1, 0)
+	}
+	local TInfo = TweenInfo.new(0.5, Enum.EasingStyle.Linear, Enum.EasingDirection.In, 0, false)
+	local Tween = TweenService:Create(Notification, TInfo, TweenGoal)
+	Tween:Play()
+	Notification.Transparency = 0.4
+	Notification.TextScaled = true
+	Notification.TextWrapped = true
+	--
+	Notification.Text = Text
+
+	local NotificationHeader = Instance.new("TextLabel")
+	NotificationHeader.Parent = Notification
+	NotificationHeader.Size = UDim2.new(1, 0, 0.4, 0)
+	NotificationHeader.Position = UDim2.new(0, 0, -0.4, 0)
+	NotificationHeader.TextScaled = true
+	NotificationHeader.TextWrapped = true
+	--
+	NotificationHeader.Text = Header
+	local TweenGoal = {
+		Position = UDim2.new(0.5, 0, 1.4, 0)
+	}
+	if tonumber(Time) then
+		local TInfo = TweenInfo.new(0.5, Enum.EasingStyle.Linear, Enum.EasingDirection.In, 0, false)
+		task.wait(Time)
+		local Tween = TweenService:Create(Notification, TInfo, TweenGoal)
+		Tween:Play()
+		Tween.Completed:Connect(function()
+			Notification:Destroy()
+		end)
+	else
+		local TInfo = TweenInfo.new(0.5, Enum.EasingStyle.Linear, Enum.EasingDirection.In, 0, false)
+		task.wait(5)
+		local Tween = TweenService:Create(Notification, TInfo, TweenGoal)
+		Tween:Play()
+		Tween.Completed:Connect(function()
+			Notification:Destroy()
+		end)
+	end
+end
+
+
+if game:IsLoaded() then
+
+else
+	Notify("Waiting.", "The game isn't loaded yet so we are waiting for it to load!")
+	repeat
+		task.wait()
+	until game:IsLoaded()
+end
+
+
+local SelectedPlr = nil
+
+
+local function GetPlrRoot(PlrInstance)
+	if PlrInstance then
+	local FindPlayer = Players:FindFirstChild(PlrInstance) or game.Workspace:FindFirstChild(PlrInstance, true)
+	if FindPlayer then
+	local Plr = FindPlayer.Character:FindFirstChild("HumanoidRootPart") or FindPlayer:FindFirstChild("HumanoidRootPart")
+	return Plr
+	else
+	Notify("Player not found!", "Player is not within game.Players or game.Workspace!")
+	return nil
+	end
+	end
+end
+
+local function ButtonClick(Name, Bool, BoolExists)
+--
+		if Name == "Tp to" then
+				local PlayerTpTo = GetPlrRoot(SelectedPlr)
+		if PlayerTpTo then
+			local PlayerCframe = PlayerTpTo.CFrame
+			local Character = game.Players.LocalPlayer.Character.Humanoid.RootPart
+			Character.CFrame = PlayerCframe
+		end
+		elseif Name == "Force die" then
+			local Pos = SpeakerChar:FindFirstChild("HumanoidRootPart").Position
+			local Character = game.Players.LocalPlayer.Character.Humanoid.RootPart
+			Character.CFrame =  CFrame.new(Vector3.new(Pos.X, game.Workspace.FallenPartsDestroyHeight + 20, Pos.Z))
+			
+	end
+end
+
+
+game.Players.PlayerAdded:Connect(function(plrJoined)
+	Notify("Player joined!", plrJoined.Name, 6)
+end)
+
+-- Data Handling & PreFunctions & Services
+
+
+
+local Buttons = {}
+
+local function encode(input, shift)
+	local encoded = ""
+	for i = 1, #input do
+		local char = input:sub(i, i)
+		local byte = string.byte(char)
+		encoded = encoded .. string.char(byte + shift)
+	end
+	return encoded
+end
+
+-- SetupInstances & common setup
+local PanelFrame = Instance.new("Frame")
+PanelFrame.Parent = ScreenGui
+PanelFrame.Size = UDim2.new(0.6, 0, 0.5, 0)
+PanelFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+PanelFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+PanelFrame.Transparency = 0.4
+--
+local UiCorner = Instance.new("UICorner")
+UiCorner.Parent = PanelFrame
+UiCorner.CornerRadius =  UDim.new(0.2, 0)
+--
+local  UiStroke = Instance.new("UIStroke")
+UiStroke.Parent = PanelFrame
+UiStroke.Thickness = 2
+UiStroke.Transparency = 0.5
+--
+local Textbox = Instance.new("TextBox")
+Textbox.Parent = PanelFrame
+Textbox.AnchorPoint = Vector2.new(0.5, 0.5)
+Textbox.Position = UDim2.new(0.5, 0, 0.5, 0)
+Textbox.Size = UDim2.new(0.8, 0, 0.25, 0)
+Textbox.Text = "Enter Passcode"
+Textbox.TextScaled = true
+Textbox.TextWrapped = true
+-- Functions For MainUse
+
+
+
+local function CreateButton(Text, Position, Parent, Size, BoolVal)
+	local ExampleButton = Instance.new("TextButton")
+	ExampleButton.Parent = Parent
+	ExampleButton.Size = Size
+	ExampleButton.AnchorPoint = Vector2.new(0.5, 0)
+	ExampleButton.TextScaled = true
+	ExampleButton.TextWrapped = true
+	ExampleButton.Text = Text
+	ExampleButton.Position = Position
+	ExampleButton.Name = Text
+
+	if BoolVal then
+		local Bool = Instance.new("BoolValue")
+		Bool.Parent = ExampleButton
+		Bool.Value = false
+		ExampleButton.Text = ExampleButton.Text..": "..tostring(Bool.Value)
+	end
+	table.insert(Buttons, ExampleButton.Name)
+	
+	
+	local function Clicked()
+		if ExampleButton:FindFirstChildOfClass("BoolValue") then
+			ExampleButton:FindFirstChildOfClass("BoolValue").Value = not ExampleButton:FindFirstChildOfClass("BoolValue").Value
+			print(ExampleButton:FindFirstChildOfClass("BoolValue").Value)
+			ButtonClick(ExampleButton.Name, ExampleButton:FindFirstChildOfClass("BoolValue").Value, true)
+			if ExampleButton:FindFirstChildOfClass("BoolValue").Value then
+				ExampleButton.Text = ExampleButton.Name..": true"
+				table.insert(ActiveBools, ExampleButton.Name)
+				
+			else
+				ExampleButton.Text = ExampleButton.Name..": false"
+				table.remove(ActiveBools, table.find(ActiveBools, ExampleButton.Name))
+				
+			end
+		else
+			ButtonClick(ExampleButton.Name, false, false)
+		end
+	end
+	ExampleButton.MouseButton1Click:Connect(Clicked)
+end
+
+--Notify("ABC", "123", 5) <-- This is a example usage of Notify()
+------------
+--CreateButton("ExampleBool", UDim2.new(0.5, 0, 0, 0), Folder, UDim2.new(0.5, 0, 0.1, 0), true)  <-|
+--CreateButton("ExampleButton", UDim2.new(0.5, 0, 0, 0), Folder, UDim2.new(0.5, 0, 0.1, 0))      <-| Example usages of Createbutton
+------------
+local Folder = Instance.new("Folder")
+
+local function Begin()
+	local PlayerTextSelector = Instance.new("TextBox")
+	PlayerTextSelector.Text = "Player Here"
+	PlayerTextSelector.Parent = PanelFrame
+	PlayerTextSelector.Size = UDim2.new(1, 0, 0.1, 0)
+	PlayerTextSelector.AnchorPoint = Vector2.new(0, 1)
+	PlayerTextSelector.Position = UDim2.new(0, 0, 1, 0)
+	PlayerTextSelector.BackgroundTransparency = 1
+	PlayerTextSelector.TextScaled = true
+	PlayerTextSelector.TextWrapped = true
+	local CloseOpen = Instance.new("TextButton")
+	CloseOpen.Parent = ScreenGui
+	CloseOpen.AnchorPoint = Vector2.new(0.5, 0)
+	CloseOpen.Position = UDim2.new(0.5, 0, 0, 0)
+	CloseOpen.Size = UDim2.new(0.4, 0, 0.1, 0)
+	CloseOpen.TextScaled = true
+	CloseOpen.TextWrapped = true
+	CloseOpen.BackgroundTransparency = 0.5
+	CloseOpen.Text = "Toggle Panel"
+	CloseOpen.MouseButton1Click:Connect(function()
+		PanelFrame.Visible = not PanelFrame.Visible
+	end)
+	
+	PlayerTextSelector.FocusLost:Connect(function()
+		local Players = game.Players:GetChildren()
+		
+		for i, v in pairs(Players) do
+			if v.Name:lower():sub(1, #PlayerTextSelector.Text) == PlayerTextSelector.Text:lower() then
+				PlayerTextSelector.Text = v.Name
+			end
+		end
+		SelectedPlr = PlayerTextSelector.Text
+		-- End of Function
+	end)
+	local UiList = Instance.new("UIListLayout")
+
+	Folder.Parent = PanelFrame
+	Folder.Name = "Commands"
+	UiList.Parent = Folder
+	UiList.HorizontalAlignment = Enum.HorizontalAlignment.Center
+	UiList.Padding = UDim.new(0.025, 0)
+	--
+	CreateButton("Tp to", UDim2.new(0.5, 0, 0, 0), Folder, UDim2.new(0.5, 0, 0.1, 0))
+	CreateButton("Force die", UDim2.new(0.5, 0, 0, 0), Folder, UDim2.new(0.5, 0, 0.1, 0))
+	CreateButton("Infinite Jump", UDim2.new(0,0,0,0), Folder, UDim2.new(0.5, 0, 0.1, 0), true)
+	--
+	Notify("Verified", "Welcome; "..Plr.DisplayName.." to AdminX V2!")
+end
+-- Gui Handler
+
+Textbox.FocusLost:Connect(function()
+	local OutPut = encode(Textbox.Text, 4)
+	if OutPut == "=|4cLegoih" then
+		Textbox.Text = "Correct!"
+		Textbox.TextColor3 = Color3.new(0.0705882, 1, 0.00392157)
+		task.wait(0.4)
+		Textbox:Destroy()
+		PanelFrame.AnchorPoint = Vector2.new(1, 0.5)
+		PanelFrame.Position = UDim2.new(1, 0, 0.5, 0)
+		task.wait(0.5)
+		PanelFrame.Size = UDim2.new(0.3, 0, 1, 0)
+		Begin()
+	end
+end)
+
+ScreenGui.ResetOnSpawn = false
+
+
+
+
+
+
+Plr.CharacterAdded:Connect(function(Char)
+	SpeakerChar = Char
+	local Humanoid = SpeakerChar:WaitForChild("Humanoid")
+	RigType = Humanoid.RigType
+	print(RigType)
+end)
+
+UIS.JumpRequest:Connect(function()
+if table.find(ActiveBools, "Infinite Jump") and SpeakerChar then
+local LegFoot
+local PlatformJumpPart = Instance.new("Part")
+PlatformJumpPart.Anchored = true
+PlatformJumpPart.Size = Vector3.new(4, 0.1, 4)
+-- Check if player is r6
+if RigType == Enum.HumanoidRigType.R6 then
+LegFoot = SpeakerChar:FindFirstChild("Left Leg")
+else
+LegFoot = SpeakerChar:FindFirstChild("LeftFoot")
+end
+
+PlatformJumpPart.Position = LegFoot.Position
+PlatformJumpPart.Parent = game.Workspace
+task.wait(1)
+for i = 1, 10 do
+	local Add = i / 10
+	PlatformJumpPart.Transparency = Add
+	task.wait(0.1)
+end
+PlatformJumpPart:Destroy()
+--local Vel = Plr.Character.PrimaryPart.AssemblyLinearVelocity
+	--Plr.Character.PrimaryPart.AssemblyLinearVelocity = Vector3.new(Vel.X, Plr.Character.Humanoid.JumpPower, Vel.Z)
+end
+end)
