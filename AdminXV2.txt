@@ -3,6 +3,8 @@
 -- MainEvents such as buttons and important data.
 local Plr = game.Players.LocalPlayer
 local UIS = game:GetService("UserInputService")
+local Chat = game:GetService("Chat")
+--
 local Players = game:GetService("Players")
 local SpeakerChar
 local RigType
@@ -16,6 +18,7 @@ local TweenService = game:GetService("TweenService")
 local ActiveBools = {}
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Parent = game.Players.LocalPlayer.PlayerGui
+
 
 
 local function Notify(Header, Text, Time)
@@ -68,9 +71,7 @@ local function Notify(Header, Text, Time)
 end
 
 
-if game:IsLoaded() then
-
-else
+if not game:IsLoaded() then
 	Notify("Waiting.", "The game isn't loaded yet so we are waiting for it to load!")
 	repeat
 		task.wait()
@@ -79,6 +80,7 @@ end
 
 
 local SelectedPlr = nil
+
 
 
 local function GetPlrRoot(PlrInstance)
@@ -101,7 +103,11 @@ local function ButtonClick(Name, Bool, BoolExists)
 		if PlayerTpTo then
 			local PlayerCframe = PlayerTpTo.CFrame
 			if PlayerCframe then
-			game.Players.LocalPlayer.Character.Humanoid.RootPart.CFrame = PlayerCframe
+			-- Tp ten studs and lookat
+			game.Players.LocalPlayer.Character.Humanoid.RootPart.CFrame = PlayerCframe + PlayerCframe.LookVector * 10
+			-- Lookat person
+			game.Players.LocalPlayer.Character.Humanoid.RootPart.CFrame = PlayerCframe.LookVector * -1
+				
 			else
 				Notify("No CFrame!", "Sorry! But we couldn't find the CFrame of the select player.")
 			end
@@ -119,6 +125,11 @@ game.Players.PlayerAdded:Connect(function(plrJoined)
 	Notify("Player joined!", plrJoined.Name, 6)
 end)
 
+game.Players.PlayerRemoving:Connect(function(PlrLeave)
+	if PlrLeave.Name == SelectedPlr then
+		Notify(PlrLeave.Name.." Is leaving!", "The Function indicating a player left is telling me they left you, how rude!")
+	end
+end)
 -- Data Handling & PreFunctions & Services
 
 
@@ -291,6 +302,34 @@ Plr.CharacterAdded:Connect(function(Char)
 	print(RigType)
 end)
 
+
+-- Check if someone chatted
+local function Chat(Plr, Msg)
+	-- Print if message is a private chat
+	
+	--
+	local ChatBar = Instance.new("TextLabel")
+	ChatBar.BackgroundTransparency = 1
+	ChatBar.Size = UDim2.new(0.5, 0, 0.1, 0)
+	ChatBar.Parent = ScreenGui
+	ChatBar.TextScaled = true
+	ChatBar.TextWrapped = true
+	ChatBar.AnchorPoint = Vector2.new(0.5, 0)
+	ChatBar.Position = UDim2.new(0.5, 0, 0.9, 0)
+	ChatBar.Text = Plr.."; "..Msg
+	task.wait(4)
+	ChatBar:Destroy()
+end
+
+for _,p in ipairs(Players:GetPlayers()) do
+	p.Chatted:Connect(function(msg) Chat(p.Name,msg) end)
+end
+
+Players.PlayerAdded:Connect(function(p)
+	p.Chatted:Connect(function(msg) Chat(p.Name,msg) end)
+end)
+
+--
 UIS.JumpRequest:Connect(function()
 if table.find(ActiveBools, "Infinite Jump") and SpeakerChar then
 local LegFoot
