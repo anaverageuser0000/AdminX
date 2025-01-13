@@ -1,9 +1,16 @@
+
+
 -- MainEvents such as buttons and important data.
 local Plr = game.Players.LocalPlayer
 local UIS = game:GetService("UserInputService")
 local Players = game:GetService("Players")
 local SpeakerChar
 local RigType
+-- Check for Player
+if Plr.Character then
+	SpeakerChar = Plr.Character
+	RigType = Plr.Character.Humanoid.RigType
+end
 --
 local TweenService = game:GetService("TweenService")
 local ActiveBools = {}
