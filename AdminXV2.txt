@@ -7,7 +7,7 @@ local Players = game:GetService("Players")
 local SpeakerChar
 local RigType
 -- Check for Player
-if Plr.Character then
+if Plr:HasAppearanceLoaded() then
 	SpeakerChar = Plr.Character
 	RigType = Plr.Character.Humanoid.RigType
 end
