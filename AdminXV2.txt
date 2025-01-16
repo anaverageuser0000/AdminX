@@ -1,4 +1,8 @@
-
+if not game:IsLoaded() then
+repeat
+task.wait()
+until game:IsLoaded()
+end
 
 -- MainEvents such as buttons and important data.
 local Plr = game.Players.LocalPlayer
@@ -19,7 +23,46 @@ local ActiveBools = {}
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Parent = game.Players.LocalPlayer.PlayerGui
 
+local function Error(Text, TypeOrYield, Time)
+	local TimeNum = 5
+	if tonumber(Time) then
+	TimeNum = Time
+	end
+	local TextLabel = Instance.new("TextLabel")
+	TextLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+	--
+	TextLabel.TextScaled = true
+	if not TypeOrYield then
+		TextLabel.TextColor3 = Color3.new(1, 0, 0)
+	elseif TypeOrYield == "Yield" then
+		TextLabel.TextColor3 = Color3.new(1, 1, 0)
+	end
+	TextLabel.TextStrokeTransparency = 0
+	TextLabel.TextStrokeColor3 = Color3.new(0.3, 0.3, 0.3)
+	--
+	TextLabel.BackgroundTransparency = 0.5
+	TextLabel.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+	-- Set Text
+	TextLabel.Text = Text
+	--
+	TextLabel.Parent = ScreenGui
+	TextLabel.Position = UDim2.new(0.5, 0, 0, 0)
+	TextLabel.Size = UDim2.new(0, 0, 0.05, 0)
+	--
+	
+	local TweenInfoScale = TweenInfo.new(0.5, Enum.EasingStyle.Linear, Enum.EasingDirection.In, 0, false)
+	local TweenGoalScale = {
+		Size = UDim2.new(1, 0, 0.2, 0),
+		Position = UDim2.new(0.5, 0, 0.5, 0)
+	}
+	local TweenScale = TweenService:Create(TextLabel, TweenInfoScale, TweenGoalScale)
+	TweenScale:Play()
+	-- Wait
+	task.wait(TimeNum)
+	TextLabel:Destroy()
 
+end
+--
 
 local function Notify(Header, Text, Time)
 	local Header, Text = tostring(Header), tostring(Text)
@@ -70,15 +113,6 @@ local function Notify(Header, Text, Time)
 	end
 end
 
-
-if not game:IsLoaded() then
-	Notify("Waiting.", "The game isn't loaded yet so we are waiting for it to load!")
-	repeat
-		task.wait()
-	until game:IsLoaded()
-end
-
-
 local SelectedPlr = nil
 
 
@@ -90,7 +124,7 @@ local function GetPlrRoot(PlrInstance)
 	local Plr = FindPlayer.Character:FindFirstChild("HumanoidRootPart") or FindPlayer:FindFirstChild("HumanoidRootPart")
 	return Plr
 	else
-	Notify("Player not found!", "Player is not within game.Players or game.Workspace!")
+	Error("Player is not within game.Players or game.Workspace!")
 	return nil
 	end
 	end
@@ -109,7 +143,7 @@ local function ButtonClick(Name, Bool, BoolExists)
 			game.Players.LocalPlayer.Character.Humanoid.RootPart.CFrame = PlayerCframe.LookVector * -1
 				
 			else
-				Notify("No CFrame!", "Sorry! But we couldn't find the CFrame of the select player.")
+				Error("Sorry! But we couldn't find the CFrame of the select player.")
 			end
 		end
 		elseif Name == "Force die" then
@@ -221,8 +255,13 @@ end
 --CreateButton("ExampleBool", UDim2.new(0.5, 0, 0, 0), Folder, UDim2.new(0.5, 0, 0.1, 0), true)  <-|
 --CreateButton("ExampleButton", UDim2.new(0.5, 0, 0, 0), Folder, UDim2.new(0.5, 0, 0.1, 0))      <-| Example usages of Createbutton
 ------------
+--Error("Abc", "Yield", 5) <-- This is a example usage of Error()
+------------
 local Folder = Instance.new("Folder")
-
+--
+game.Loaded:Connect(function()
+	Notify("Done loading!", "The game has finished loading!")
+end)
 local function Begin()
 	local PlayerTextSelector = Instance.new("TextBox")
 	PlayerTextSelector.Text = "Player Here"
@@ -330,7 +369,11 @@ Players.PlayerAdded:Connect(function(p)
 end)
 
 --
+local CanJumpInf = true
+
 UIS.JumpRequest:Connect(function()
+	if CanJumpInf then
+		CanJumpInf = false
 if table.find(ActiveBools, "Infinite Jump") and SpeakerChar then
 local LegFoot
 local PlatformJumpPart = Instance.new("Part")
@@ -345,14 +388,19 @@ end
 
 PlatformJumpPart.Position = LegFoot.Position
 PlatformJumpPart.Parent = game.Workspace
-task.wait(1)
-for i = 1, 10 do
-	local Add = i / 10
-	PlatformJumpPart.Transparency = Add
-	task.wait(0.1)
-end
-PlatformJumpPart:Destroy()
+
+
 --local Vel = Plr.Character.PrimaryPart.AssemblyLinearVelocity
 	--Plr.Character.PrimaryPart.AssemblyLinearVelocity = Vector3.new(Vel.X, Plr.Character.Humanoid.JumpPower, Vel.Z)
+task.wait(0.1)
+CanJumpInf = true
+
+	for i = 1, 10 do
+local Add = i / 10
+PlatformJumpPart.Transparency = Add
+task.wait(0.1)
+	end
+PlatformJumpPart:Destroy()
 end
+	end
 end)
