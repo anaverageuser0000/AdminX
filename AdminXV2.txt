@@ -23,7 +23,7 @@ end
 local TweenService = game:GetService("TweenService")
 local ActiveBools = {}
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Parent = game.Players.LocalPlayer.PlayerGui
+ScreenGui.Parent = game:GetService("CoreGui")
 
 local function Error(Text, TypeOrYield, Time)
 	local TimeNum = 5
