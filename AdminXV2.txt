@@ -407,4 +407,4 @@ end
 	end
 end)
 local Version, Logs = game:HttpGet("https://raw.githubusercontent.com/anaverageuser0000/AdminX/refs/heads/main/InfoGraphics")
-Notify("Test", GetHttpRequest.Version)
+Notify("Test", Version)
