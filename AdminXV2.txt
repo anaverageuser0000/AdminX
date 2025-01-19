@@ -406,6 +406,3 @@ end
 end
 	end
 end)
-
-local Welcome = game:HttpGet("https://raw.githubusercontent.com/anaverageuser0000/AdminX/refs/heads/main/InfoGraphics")
-Notify("Test", Version)
