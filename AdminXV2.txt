@@ -4,6 +4,8 @@ task.wait()
 until game:IsLoaded()
 end
 
+
+local HttpService = game:GetService("HttpService")
 -- MainEvents such as buttons and important data.
 local Plr = game.Players.LocalPlayer
 local UIS = game:GetService("UserInputService")
@@ -404,3 +406,5 @@ PlatformJumpPart:Destroy()
 end
 	end
 end)
+
+Notify("Test",HttpService:GetAsync("https://raw.githubusercontent.com/anaverageuser0000/AdminX/refs/heads/main/InfoGraphics"))
