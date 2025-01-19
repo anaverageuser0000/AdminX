@@ -406,5 +406,4 @@ PlatformJumpPart:Destroy()
 end
 	end
 end)
-
-Notify("Test",HttpService:GetAsync("https://raw.githubusercontent.com/anaverageuser0000/AdminX/refs/heads/main/InfoGraphics"))
+Notify("Test",game:HttpGet("https://raw.githubusercontent.com/anaverageuser0000/AdminX/refs/heads/main/InfoGraphics"))
