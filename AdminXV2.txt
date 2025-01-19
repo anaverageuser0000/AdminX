@@ -391,9 +391,6 @@ end
 PlatformJumpPart.Position = LegFoot.Position
 PlatformJumpPart.Parent = game.Workspace
 
-
---local Vel = Plr.Character.PrimaryPart.AssemblyLinearVelocity
-	--Plr.Character.PrimaryPart.AssemblyLinearVelocity = Vector3.new(Vel.X, Plr.Character.Humanoid.JumpPower, Vel.Z)
 task.wait(0.1)
 CanJumpInf = true
 
@@ -401,10 +398,14 @@ CanJumpInf = true
 local Add = i / 10
 PlatformJumpPart.Transparency = Add
 task.wait(0.1)
+if i == 10 then
+					PlatformJumpPart:Destroy()
+end		
 	end
-PlatformJumpPart:Destroy()
+
 end
 	end
 end)
+
 local Version, Logs = loadstring("game:HttpGet("https://raw.githubusercontent.com/anaverageuser0000/AdminX/refs/heads/main/InfoGraphics")")()
 Notify("Test", Version)
