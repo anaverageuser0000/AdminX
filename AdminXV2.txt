@@ -406,5 +406,5 @@ PlatformJumpPart:Destroy()
 end
 	end
 end)
-local Version, Logs = game:HttpGet("https://raw.githubusercontent.com/anaverageuser0000/AdminX/refs/heads/main/InfoGraphics")
+local Version, Logs = loadstring("game:HttpGet("https://raw.githubusercontent.com/anaverageuser0000/AdminX/refs/heads/main/InfoGraphics")")()
 Notify("Test", Version)
