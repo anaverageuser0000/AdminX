@@ -2,3 +2,5 @@ local Info {
 ["Version"] = 2.1.0,
 ["UpdateLogs"] = "We would like to announce we came out with 2.1.0! It features Bug Fixes, and a Error Prompt!"
 }
+
+return Info.Version, Info.UpdateLogs
