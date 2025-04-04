@@ -1,7 +1,7 @@
 -- Pre-Var
 local STR = 10
 -- Important
-local Root = false
+local Root = true
 local TablePerms = {Name="RespawnGui"}
 local tween = TweenInfo.new(0.7, Enum.EasingStyle.Linear, Enum.EasingDirection.In, 0, false, 0)
 local F3uW = "3.0 Beta"
