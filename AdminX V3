@@ -1,0 +1,172 @@
+-- Pre-Var
+local STR = 10
+-- Important
+local Root = false
+local TablePerms = {Name="RespawnGui"}
+local tween = TweenInfo.new(0.7, Enum.EasingStyle.Linear, Enum.EasingDirection.In, 0, false, 0)
+local F3uW = "3.0 Beta"
+local Fe34 = game:GetService("RunService")
+-- Functions
+
+local function NotifyFunction(SGui, Text, SubText)
+	if SGui then
+	local TL1 = Instance.new("TextLabel")
+	local TL2 = Instance.new("TextLabel")
+	TL1.Size = UDim2.new(0.2, 0, 0.2, 0)
+	TL2.Parent = TL1
+	TL2.Size = UDim2.new(1, 0, 0.2, 0)
+	TL2.Position = UDim2.new(0, 0, -TL2.Size.Y.Scale, 0)
+	TL1.Position = UDim2.new(0.5, 0, 0.9, 0)
+	TL1.AnchorPoint = Vector2.new(0.5, 0.5)
+	--
+	TL1.BackgroundTransparency = 0.5
+	TL1.TextTransparency = 0.4
+	TL2.BackgroundTransparency = 0.5
+	TL2.TextTransparency = 0.4
+	--
+	TL1.Text = SubText
+	TL2.Text = Text
+	-- Fonts
+	TL1.TextScaled = true
+	TL2.TextScaled = true
+		if Root then
+			TL1.Parent = game.CoreGui
+		else
+			TL1.Parent = SGui
+		end	
+	--
+	task.wait((rawlen(Text)+rawlen(SubText)) / 18)
+	local MakeTween = game:GetService("TweenService"):Create(TL1, tween, {Position = UDim2.new(0.5, 0, 2, 0)})
+	MakeTween:Play()
+	task.wait(tween.Time)
+	TL1:Destroy()
+	end
+end
+--
+local function Start(SGui, CGui, Player)
+	if Root then
+	local I = SGui:Clone()
+	I.Parent = CGui
+	I.Name = TablePerms.Name
+	end
+	--
+	SGui.Parent = Player.PlayerGui
+	SGui.Name = TablePerms.Name
+	SGui.ResetOnSpawn = false
+	
+	--
+	if Root then
+		task.spawn(function()NotifyFunction(CGui, "You have CoreGUI access.", "CoreGUI access means it's gonna be ontop of everything instead of within ScreenGUI!")end)
+	return true	
+	else
+		task.spawn(function()NotifyFunction(SGui, "No CoreGUI privileges!", "This means your thing can NOT get access to CoreGui!") end)
+	return false	
+	end
+	
+	--▄
+end
+
+-- Main Parts
+local CoreGui = game.CoreGui or game.Players.LocalPlayer.PlayerGui
+local StarterGui = game.StarterGui
+local screenGUI = Instance.new("ScreenGui")
+local Player = game.Players.LocalPlayer
+local Background = Instance.new("Frame")
+
+-- Setup
+local R = Start(screenGUI, CoreGui, Player)
+if R then
+	Background.Parent = CoreGui
+else
+	Background.Parent = screenGUI
+end
+-- Variables
+	local PModel
+	local GP = game:GetService("Players")
+	--
+	Player.CharacterAdded:Wait()
+	Player.Character:FindFirstChild("HumanoidRootPart")
+	PModel = Player.Character
+
+-- Make Gui
+	Background.AnchorPoint = Vector2.new(0.5, 0.5)
+	Background.Position = UDim2.new(0.5, 0, 0.2, 0)
+	--
+	Background.Size = UDim2.new(0.5, 0, 0.1, 0)
+	Background.BackgroundTransparency = 0.5
+	Background.BackgroundColor3 = Color3.new(0.243137, 0.243137, 0.243137)
+	--
+	local CurvedEdge = Instance.new("UICorner")
+	CurvedEdge.Parent = Background
+	local Stroke = Instance.new("UIStroke")
+	Stroke.Parent = Background
+	Stroke.Thickness = 4
+	Stroke.Transparency = 0.4
+	-- Title
+	local BTitle = Instance.new("TextLabel")
+	BTitle.Parent = Background
+	BTitle.Size = UDim2.new(1, 0, 0.3, 0)
+	BTitle.BackgroundTransparency = 1
+	BTitle.TextScaled = true
+	BTitle.TextStrokeColor3 = Color3.new(0.596078, 0.596078, 0.596078)
+	BTitle.TextStrokeTransparency = 0
+	--
+	BTitle.Text = "AdminX "..F3uW
+	
+	-- Command Functions
+	local function Tp()
+	PModel.PrimaryPart.CFrame = CFrame.new(PModel.PrimaryPart.CFrame.Position + PModel.PrimaryPart.CFrame.LookVector * STR, PModel.PrimaryPart.CFrame.Position + PModel.PrimaryPart.CFrame.LookVector * (STR+4))
+	end
+local function GetF3nv(P2R) P2R.CFrame = CFrame.new(PModel.PrimaryPart.CFrame.Position + PModel.PrimaryPart.CFrame.LookVector * 6, PModel.PrimaryPart.CFrame.Position + PModel.PrimaryPart.CFrame.LookVector * (5)) P2R.CFrame = P2R.CFrame * CFrame.new(0, 1, 0) end
+	local Part = Instance.new("Part")
+	Part.Parent = workspace
+	Part.Anchored = true
+	Part.CanCollide = false
+	Part.Transparency = 1
+	Part.Size = Vector3.new(5, 3, 0.1)
+	Part.Name = "AdminX"
+	local SGui = Instance.new("SurfaceGui")
+	SGui.Parent = Part
+	SGui.Adornee = Part
+	local DragDet = Instance.new("DragDetector")
+	DragDet.Parent = Part
+	DragDet.RunLocally = true
+	
+	DragDet.DragStart:Connect(function()
+		Part.Position = Player:GetMouse().Hit.Position
+	end)
+	-- Functions
+local F4uW = Instance.new("\84\101\120\116\66\111\120") F4uW.Parent = Background F4uW.Size = UDim2.new(1, 0, 0.8, 0) F4uW.AnchorPoint = Vector2.new(0, 0.5) F4uW.Position = UDim2.new(0, 0, 0.7, 0)
+F4uW.TextScaled = true F4uW.BackgroundTransparency = 1 F4uW.TextStrokeColor3 = Color3.new(1, 1, 1)	
+F4uW.TextStrokeTransparency = 0 F4uW.ZIndex = 2 F4uW.ClearTextOnFocus = false F4uW.PlaceholderText = "\226\128\139AdminX\226\128\139".."\r\226\128\139"..F3uW.."".."".."\r\226\128\139Ter\226\128\139mi\110\97\108\226\128\139\33"
+F4uW.Text = ""	F4uW.FocusLost:Connect(function(enter) if enter then F4IuW(F4uW.Text)end end)
+	
+	local D3P4P = false
+function F4IuW(c3md) if string.find(c3md, " ") then firstWord, secondWord = c3md:match("^(%S+)%s+(%S+)$") firstWord=string.lower(firstWord)secondWord=string.lower(secondWord) else firstWord = string.lower(c3md) end if firstWord == "pass" or firstWord == "thru" or firstWord == "through" then STR = tonumber(secondWord) Tp() 
+		elseif firstWord == "panel" then
+			GetF3nv(Part)
+			D3P4P = not D3P4P
+		if D3P4P then
+			Part.Transparency = 0.4
+			Part.Color = Color3.new(0.372549, 0.372549, 0.372549)
+			F4uW.Parent = SGui
+			BTitle.Parent = SGui
+			Background.Visible = false
+		else 
+			Part.Transparency = 1 
+			F4uW.Parent = Background 
+			BTitle.Parent = Background
+			Background.Visible = true
+		end
+	end end
+	-- Making the Text-Terminal
+
+
+-- End
+	local function S4rt(fe4t6K, Fegr58) return fe4t6K-Fegr58 end
+	local Srt = tick()
+	Fe34.Heartbeat:Connect(function()
+	local N02 = tick() local E3la2d = S4rt(N02,Srt)
+	end)
+	
+	
